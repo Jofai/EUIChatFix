@@ -1,0 +1,34 @@
+name: Publish Addon Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers whenever you push a version tag like v1.0.0
+
+jobs:
+  build_release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Pack Addon Folder into Zip
+        run: |
+          # Stage files in /tmp to prevent recursive copying or exclusion conflicts
+          mkdir -p /tmp/EUIChatFix
+          rsync -r --exclude='.git*' --exclude='.jj*' --exclude='.github' ./ /tmp/EUIChatFix/
+          
+          # Zip from /tmp so EUIChatFix is the top-level folder inside the archive
+          cd /tmp && zip -r $GITHUB_WORKSPACE/EUIChatFix.zip EUIChatFix
+
+      - name: Create GitHub Release and Upload Asset
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: EUIChatFix.zip
+          asset_name: EUIChatFix.zip
+          tag: ${{ github.ref_name }}
+          overwrite: true
