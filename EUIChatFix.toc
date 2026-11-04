@@ -1,0 +1,9 @@
+## Interface: 120100, 50504, 38002, 20506, 16001, 11509
+## Title: ChatFix
+## Notes: Makes Ellesmere chat input box opaque.
+## Author: Jofa
+## Version: 1.0.0
+## Dependencies: EllesmereUIChat
+## AllowLoadGameType: mainline, forever
+
+EUIChatFix.lua
